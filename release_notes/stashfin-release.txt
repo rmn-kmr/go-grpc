@@ -1,0 +1,23 @@
+******************************************************************************************
+			LSP  RELEASE NOTES
+
+			Release: stashfin
+
+******************************************************************************************
+
+PERMANENT RELEASE NOTES:
+
+PR - https://github.com/rmnkmr/lsp/pull/145
+
+******************************************************************************************
+
+DATABASE MIGRATIONS:
+
+Environment: All
+
+insert into public.loan_provider
+ (provider_id, provider, provider_type, provider_account_id, pre_expiration_token_refresh_mins, provider_name, api_key, api_secret, api_environment, api_base_url, labels, create_time, update_time, provider_config, documents_required)
+ values
+ ('521e2533-660c-43f3-a9ba-9f55033656t3', 'STASHFIN', 'referral', '55', 10, 'STASHFIN', 'a203ed58-1452-439a-a85d-03bdcf3cd9fb', '9b9ea66ad868315ee41cf0b8c5bc960ee73c60f031e3021d1706a999ba0a6d9', 'staging', 'https://ee072ece-65cb-49dc-b0b1-51a0c253fccc.mock.pstmn.io', '{}', '2023-02-06 21:09:47.000000', '2023-02-06 21:09:51.000000', '{"is_direct_referral": false}', 'aadhaar,selfie');
+
+******************************************************************************************

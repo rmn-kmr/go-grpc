@@ -1,0 +1,25 @@
+env: staging
+
+port: 8085
+
+log:
+  level: debug
+
+database: # STAGE DB
+  host: localhost
+  port: 5437
+  username: lsp
+  password: lsp2022@12
+  dbname: lsp
+  idle_conn: 10
+  max_conn: 500
+
+
+gcp:
+  project_id: "rmnkmr-staging-env"
+  bigquery_project_id: "rmnkmr-data-science"
+
+
+newrelic:
+  license: fbf0f8b9803e2decb119bcbdef336272ebcdcb07
+  ignore_error_status_codes: [ 401 ]

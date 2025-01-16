@@ -1,0 +1,474 @@
+syntax = "proto3";
+
+package rmnkmr.lsp.v1;
+import "google/protobuf/any.proto";
+
+option go_package = "github.com/rmnkmr/lsp/proto;lsp";
+
+message RequestMetadata {
+  string additional_fields = 1;
+  Provider provider = 2;
+}
+
+message LoanProvidersRequest {}
+
+message ProviderConfig {}
+
+message LoanProviderResponse {
+  string provider = 1;
+  string provider_id = 2;
+  string provider_name = 3;
+  ProviderConfig provider_config = 4;
+  string provider_type = 5;
+}
+
+message LoanProvidersResponse {
+  repeated LoanProviderResponse providers = 1;
+}
+
+message InitiateLoanRequest {
+  Provider provider = 1;
+  string amount = 2;
+}
+
+message InitiateLoanResponse {
+  string loan_id = 1;
+}
+
+enum Provider {
+  UNKNOWN = 0;
+  STASHFIN = 1;
+}
+
+message UserPersonalDetails {
+  string metadata = 1;
+  string name = 2;
+  string address = 3;
+  string pincode = 4;
+  string phone_number = 5;
+  string pan = 6;
+  string dob = 7;
+  string gender = 8;
+  string email = 9;
+  string fathers_name = 10;
+  string mothers_name = 11;
+  string city = 12;
+  string state = 13;
+  string AddrProofNumber = 14;
+  string NbfcBorrowerId = 15;
+  string merchant_id = 16;
+  string pan_metadata = 17;
+}
+
+message UserLoanDetails {
+  string metadata = 1;
+  float loan_amount = 2;
+  int64 loan_tenure = 3;
+  float loan_interest_amount = 4;
+  int64 Installments = 5;
+  float processing_fee_amount = 6;
+  float processing_fee_percentage = 7;
+  float processing_fee_gst = 8;
+  float processing_fee_gst_percentage = 9;
+  string nbfc = 10;
+  InstallmentFrequency installment_frequency = 11;
+  float loan_interest_percentage = 12;
+  int64 installment_amount = 13;
+  string lead_id = 14;
+  repeated Installment Installment_data = 15;
+  int64 first_emi_date = 16;
+  int64 disbursal_date = 17;
+}
+
+message UserKycDetails {
+  string type = 1;
+  string identifier = 2;
+  string url = 3;
+  string bucket_name = 4;
+  bool verified = 5;
+  string document_name = 6;
+  string share_code = 7;
+}
+
+message UserBankDetails {
+  string bank_name = 1;
+  string bank_acc_num = 2;
+  string bank_ifsc = 3;
+  string upi_vpa = 4;
+  string account_holder_name = 5;
+  string type = 6;
+  int64 pan_bank_name_similarity = 7;
+  AccountType account_type = 8;
+  enum AccountType {
+    SAVINGS = 0;
+    CURRENT = 1;
+  }
+}
+
+message Installment {
+  float number = 1;
+  int64 installment_date = 2;
+  float due_amount = 3;
+  float principal_due = 4;
+  float interest_due = 5;
+}
+
+message UserBureauDetails {
+  int64 rmnkmr_score = 1;
+  float avg_3_mnts_txn_amt = 2;
+  int64 vintage = 3;
+  float avg_3_mnts_app_sessions = 4;
+  int64 days_since_last_active = 5;
+  string last_30_days_transacted_flag = 6;
+  int64 mnt_customer_count_lag1 = 7;
+  int64 mnt_customer_count_lag2 = 8;
+  int64 mnt_customer_count_lag3 = 9;
+  float mnt_txn_amt_lag1 = 10;
+  float mnt_txn_amt_lag2 = 11;
+  float mnt_txn_amt_lag3 = 12;
+  string BusinessCategory = 13;
+
+  int64 writtenoff_or_default = 14;
+  int64 dpd_in_last_12_months = 15;
+  int64 cnt_active_unsecured_loans = 16;
+
+  int64 active_account_cnt = 17;
+  int64 inactive_account_cnt = 18;
+  int64 wo_settled_sf_wd = 19;
+  int64 num_30plus_dpd_last_3_months = 20;
+  int64 num_90plus_dpd_last_12_months = 21;
+  string bureau_file = 22;
+
+  string foir = 23;
+  bool customer_type_ntc = 24;
+  int64 current_overdue_value = 25;
+  int64 bureau_score = 26;
+  int64 enquiries_bureau_30_days = 27;
+  string bureau_type = 28;
+  float monthly_emi = 29;
+  float estimated_income = 30;
+}
+//
+//message UserBureauDetailsNbfc {
+//  // Arthmate
+//  int64 writtenoff_or_default = 1;
+//  int64 dpd_in_last_12_months = 2;
+//  int64 cnt_active_unsecured_loans = 3;
+//
+//  // Apollo
+//  int64 active_account_cnt = 4;
+//  int64 inactive_account_cnt = 5;
+//  int64 wo_settled_sf_wd = 6;
+//  int64 num_30plus_dpd_last_3_months = 7;
+//  int64 num_90plus_dpd_last_12_months = 8;
+//  string bureau_file = 9;
+//
+//  // Common
+//  string foir = 10;
+//  bool customer_type_ntc = 11;
+//  int64 current_overdue_value = 12;
+//  int64 bureau_score = 13;
+//  int64 enquiries_bureau_30_days = 14;
+//  string bureau_type = 15;
+//  float monthly_emi = 16;
+//  float estimated_income = 17;
+//}
+
+message CreateLeadRequest {
+  RequestMetadata metadata = 1;
+  UserPersonalDetails user_personal_details = 2;
+  UserLoanDetails user_loan_details = 3;
+  UserBureauDetails user_bureau_details = 4;
+}
+
+message CreateLeadResponse {
+  string nbfc_lead_id = 1;
+  string nbfc_loan_id = 2;
+  string nbfc_borrower_id = 3;
+  string status = 4;
+  map<string, string> rejection_reason = 5;
+  string redirect_url = 6;
+}
+
+message CheckLoanStatusRequest {
+  RequestMetadata metadata = 1;
+  string nbfc_lead_id = 2;
+}
+
+message CheckLoanStatusResponse {
+  Status status = 1;
+  enum Status {
+    PENDING = 0;
+    SUCCESS = 1;
+    FAILED = 2;
+    INCOMPLETE_APPLICATION = 3;
+    UNDER_PROCESSING = 4;
+    APPROVED = 5;
+    ELIGIBLE = 6;
+    REJECTED = 7;
+  }
+}
+
+message CheckStatusResponse {
+  bool status = 1;
+  StatusResult results = 2;
+}
+message StatusResult {
+  string application_id = 1;
+  string application_status = 2;
+  string bank_statement_url = 3;
+  StatusResultOfferDetails offer_details = 4;
+}
+message StatusResultOfferDetails {
+  float Amount = 1;
+  float Tenure = 2;
+  float Roi = 3;
+  float ProcessingFeeRate = 4;
+  float Emi = 5;
+  float SpdcAmount = 6;
+  float DisbursalAmount = 7;
+  string FirstEmiDate = 8;
+}
+
+
+message CreateRepaymentScheduleRequest {
+  string RepaymentFrequency = 1;
+  string EMITenure = 2;
+  string EMIStartDate = 3;
+  string Checksum = 4;
+  string LoanID = 5;
+  repeated PaymentScheduleData PaymentSchedule = 6;
+  Provider provider = 7;
+}
+
+message PaymentScheduleData {
+  string interest = 1;
+  string OtherCharges = 2;
+  string Principle = 3;
+  string TotalAmount = 4;
+  string Date = 5;
+}
+
+message Document {
+  string url = 1;
+  DocumentType type = 2;
+  string bucket = 3;
+  string name = 4;
+  bytes file = 5;
+}
+
+message UploadDocumentRequest {
+  RequestMetadata metadata = 1;
+  UserPersonalDetails user_personal_details = 2;
+  UserLoanDetails user_loan_details = 3;
+}
+
+message UploadKycDetailsRequest {
+  RequestMetadata metadata = 1;
+  UserPersonalDetails user_personal_details = 2;
+  UserLoanDetails user_loan_details = 3;
+  repeated UserKycDetails user_kyc_details = 5;
+  string loan_id = 4;
+}
+
+message UploadKycDetailsResponse {
+  bool status = 1;
+}
+
+message UploadDocumentResponse {
+
+}
+
+message BureauPullRequest {
+
+}
+
+message BureauPullResponse {
+
+}
+
+message GetLoanRequest {
+  RequestMetadata metadata = 1;
+  string borrower_id = 2;
+  string loan_id = 3;
+}
+
+message GetLoanResponse {
+  LoanStatus status = 1;
+}
+
+message RepaymentAllocation {
+  int64 amount = 1;
+  int64 principal = 2;
+  int64 interest = 3;
+  RepaymentAllocationType type = 4;
+  int64 installment_number = 5;
+  string due_date = 6;
+}
+
+
+message SaveRepaymentRequest {
+  RequestMetadata metadata = 1;
+  string repayment_transaction_id = 2;
+  string payment_date = 3;
+  string reference_id = 4; // any reference id at nbfc's end - against which repayment was made, eg - loan_id, lead_id
+  string mode_of_payment = 5;
+  repeated RepaymentAllocation allocations = 6;
+}
+
+message SaveRepaymentResponse {
+
+}
+
+message LoanLimitStatusRequest {
+  RequestMetadata metadata = 1;
+  int64 partner_score = 2;
+  string nbfc_loan_id = 3;
+  string company_name = 4;
+}
+
+message LoanLimitStatusResponse {
+  bool is_success = 1;
+  bool is_approved = 2;
+  int64 max_amount = 3;
+  string msg = 4;
+  bool is_rejected = 5;
+}
+
+
+message DisbursalLoanRequest {
+  RequestMetadata metadata = 1;
+  UserLoanDetails user_loan_detail = 2;
+  string nbfc_lead_id = 3;
+  string loan_agreement_id = 4;
+  UserPersonalDetails merchant = 5;
+  repeated Document documents = 6;
+  repeated UserKycDetails user_kyc_detail = 8;
+}
+
+message DisbursalLoanResponse {
+  bool status = 1;
+  string application_status = 2;
+  StatusResult result = 3;
+}
+
+message CreateRepaymentScheduleResponse {
+  string Status = 1;
+  string Message = 2;
+  string code = 3;
+  string checksum = 4;
+  string Date = 5;
+  message Data {
+    string LoanId = 1;
+  }
+}
+
+message CreateLoanRequest {
+  RequestMetadata metadata = 1;
+  UserPersonalDetails user_personal_details = 2;
+  UserLoanDetails user_loan_details = 3;
+  repeated UserKycDetails user_kyc_details = 4;
+  UserBankDetails user_bank_details = 6;
+  repeated Document documents = 7;
+  repeated RepaymentSchedule repaymentSchedule = 8;
+}
+
+message RepaymentSchedule {
+  int64 instalment_number = 1;
+  int64 due_date = 2;
+  float due_amount = 3;
+  float principal_amount = 4;
+  float interest_amount = 5;
+}
+
+
+message CreateLoanResponse {
+  string nbfc_lead_id = 1;
+  string nbfc_loan_id = 2;
+  string nbfc_borrower_id = 3;
+  string status = 4;
+  map<string, string> rejection_reason = 5;
+  bool is_success = 6;
+}
+
+message APISuccessResponse {
+  bool status = 1;
+  string message = 2;
+}
+
+message PaymentUrlRequest{
+  RequestMetadata metadata = 1;
+  string nbfc_lead_id = 2;
+  float amount = 3;
+}
+
+message PaymentUrlResponse{
+  bool status = 1;
+  string repayment_url = 2;
+}
+
+
+// ENUM's
+enum LoanStatus {
+  PENDING = 0;
+  FAILED = 1;
+  DISBURSED = 2;
+  APPROVED = 3;
+  REJECTED = 4;
+}
+
+enum DocumentType {
+  // kyc documents
+  AADHAAR = 0;
+  SELFIE = 1;
+  PAN = 2;
+  SIGNATURE = 3;
+  DRIVING_LICENSE = 4;
+  AADHAAR_ZIP = 5;
+
+  // Loan documents
+  UNSIGNED_LOAN_AGREEMENT = 6;
+  SIGNED_LOAN_AGREEMENT = 7;
+  KFS = 8;
+
+  //
+  OKYC = 9;
+  OTHER = 10;
+}
+
+enum InstallmentFrequency {
+  DAILY = 0;
+  WEEKLY = 1;
+  MONTHLY = 2;
+}
+
+enum Gender {
+  MALE = 0;
+  FEMALE = 1;
+}
+
+enum RepaymentAllocationType {
+  INSTALLMENT = 0;
+  PENALTY = 1;
+}
+
+
+
+// entities
+service API {
+  rpc LoanProviders(LoanProvidersRequest) returns (LoanProvidersResponse) {}
+  rpc InitiateLoan(InitiateLoanRequest) returns (InitiateLoanResponse) {}
+  rpc CreateRepaymentSchedule(CreateRepaymentScheduleRequest) returns (CreateRepaymentScheduleResponse) {}
+  rpc CreateLead(CreateLeadRequest) returns (CreateLeadResponse) {} // to be called before kyc step
+  rpc UploadDocuments(UploadDocumentRequest) returns (UploadDocumentResponse) {}
+  rpc CreateLoan(CreateLoanRequest) returns (CreateLoanResponse) {}
+  rpc BureauPull(BureauPullRequest) returns (BureauPullResponse) {}
+  rpc GetLoan(GetLoanRequest) returns (GetLoanResponse) {}
+  rpc SaveRepayment(SaveRepaymentRequest) returns (SaveRepaymentResponse) {}
+  rpc CheckLoanLimitStatus(LoanLimitStatusRequest) returns (LoanLimitStatusResponse) {}
+  rpc DisburseLoan(DisbursalLoanRequest) returns (DisbursalLoanResponse) {}
+  rpc CheckLoanStatus(CheckLoanStatusRequest) returns (CheckLoanStatusResponse) {}
+  rpc PaymentUrl(PaymentUrlRequest) returns (PaymentUrlResponse) {}
+  rpc UpdateKycDetails(UploadKycDetailsRequest) returns (UploadKycDetailsResponse) {}
+
+}
